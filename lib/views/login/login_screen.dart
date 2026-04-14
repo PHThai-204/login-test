@@ -1,0 +1,196 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:login_test/core/themes/app_color.dart';
+import 'package:login_test/data/enums/status_enum.dart';
+import 'package:login_test/views/customs/dialog_custom.dart';
+import 'package:login_test/views/home/home_screen.dart';
+import '../../core/themes/app_text_style.dart';
+
+import '../../generated/assets.gen.dart';
+import 'components/password_input.dart';
+import 'components/tax_input.dart';
+import 'components/username_input.dart';
+import 'cubit/login_cubit.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late final FocusNode _taxFocusNode;
+  late final FocusNode _usernameFocusNode;
+  late final FocusNode _passwordFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _taxFocusNode = FocusNode();
+    _usernameFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _taxFocusNode.dispose();
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardDismissOnTap(
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        resizeToAvoidBottomInset: false,
+        body: BlocListener<LoginCubit, LoginState>(
+          listenWhen: (previous, current) => current.status != previous.status,
+          listener: (context, state) {
+            if (state.status.isSuccess) {
+              if (state.user != null) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomeScreen(user: state.user!)),
+                );
+              }
+            } else if (state.status.isFailure) {
+              showDialogCustom(
+                context: context,
+                title: 'Thông báo',
+                content: state.errorMessage,
+                confirmText: 'close'.tr(),
+                onConfirm: () {
+                  Navigator.of(context).pop();
+                },
+              );
+            }
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 34),
+                  Align(alignment: Alignment.centerLeft, child: Assets.images.imgLogo.image()),
+                  const SizedBox(height: 24),
+                  TaxInput(
+                    focusNode: _taxFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => FocusScope.of(context).requestFocus(_usernameFocusNode),
+                  ),
+                  const SizedBox(height: 10),
+                  UsernameInput(
+                    focusNode: _usernameFocusNode,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
+                  ),
+                  const SizedBox(height: 10),
+                  PasswordInput(
+                    focusNode: _passwordFocusNode,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => context.read<LoginCubit>().login(),
+                  ),
+                  const SizedBox(height: 10),
+                  BlocBuilder<LoginCubit, LoginState>(
+                    buildWhen: (previous, current) => previous.status != current.status,
+                    builder: (context, state) {
+                      final isLoading = state.status.isProcessing;
+                      return SizedBox(
+                        height: 50,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: isLoading ? null : context.read<LoginCubit>().login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.darkOrange,
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                            disabledBackgroundColor: Colors.grey[400],
+                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text('login'.tr(), style: AppTextStyles.style.s16.w600.whiteColor),
+                        ),
+                      );
+                    },
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _BottomActionItem(
+                          icon: Assets.svgs.icHeadphone.svg(),
+                          label: 'help'.tr(),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _BottomActionItem(
+                          icon: Assets.svgs.icSocialLink.svg(),
+                          label: 'group'.tr(),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _BottomActionItem(
+                          icon: Assets.svgs.icSearchNormal.svg(),
+                          label: 'search'.tr(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomActionItem extends StatelessWidget {
+  final Widget icon;
+  final String label;
+
+  const _BottomActionItem({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 54,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: AppColors.lightGrey),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF3B3B3B),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
