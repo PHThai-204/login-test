@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:login_test/core/di/injection.dart';
+import 'package:login_test/data/local/hive_storage.dart';
 import 'views/splash/splash_screen.dart';
 
 Future<void> main() async {
@@ -8,10 +10,12 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   try {
     await Firebase.initializeApp();
-    debugPrint('🔥 Firebase connected successfully');
+    debugPrint('Firebase connected successfully');
   } catch (e) {
-    debugPrint('❌ Firebase connection failed: $e');
+    debugPrint('Firebase connection failed: $e');
   }
+  await HiveStorage.init();
+  configureDependencies();
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('vi')],

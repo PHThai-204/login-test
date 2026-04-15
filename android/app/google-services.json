@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "821980855536",
+    "project_id": "test-login-ff4fd",
+    "storage_bucket": "test-login-ff4fd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821980855536:android:d9b22a4d1621bb2f911635",
+        "android_client_info": {
+          "package_name": "com.pht.login_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8u3ZNGoCJjsF1wN-m8krP8vbYc0hXryc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

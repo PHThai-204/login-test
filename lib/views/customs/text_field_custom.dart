@@ -16,6 +16,7 @@ class TextFieldCustom extends StatefulWidget {
   final FocusNode? focusNode;
   final bool alwaysShowSuffix;
   final Widget? suffix;
+  final bool isPasswordField;
   final Function(String) onChanged;
   final ValueChanged<String>? onSubmitted;
   final Function()? onClickSuffix;
@@ -36,6 +37,7 @@ class TextFieldCustom extends StatefulWidget {
     this.inputType,
     this.textInputAction,
     this.alwaysShowSuffix = false,
+    this.isPasswordField = false,
   });
 
   @override
@@ -98,7 +100,12 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
             focusedBorder: AppThemes.inputFocused,
             suffixIcon: widget.suffix != null
                 ? CupertinoButton(
-                    onPressed: widget.onClickSuffix,
+                    onPressed: () {
+                      widget.onClickSuffix?.call();
+                      if (!widget.isPasswordField) {
+                        _textEditingController.clear();
+                      }
+                    },
                     child: ValueListenableBuilder<TextEditingValue>(
                       valueListenable: _textEditingController,
                       builder: (context, value, child) {
@@ -118,7 +125,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
             filled: true,
           ),
         ),
-        SizedBox(height: 4,),
+        SizedBox(height: 4),
         Align(
           alignment: Alignment.centerRight,
           child: Text(

@@ -35,7 +35,7 @@ class TaxInput extends StatelessWidget {
           onSubmitted: onSubmitted,
           textStyle: AppTextStyles.style.w600.s16.darianColor,
           suffix: Assets.svgs.icCloseCircle.svg(),
-          onClickSuffix: () {},
+          onClickSuffix: context.read<LoginCubit>().clearTaxCode,
         );
       },
     );

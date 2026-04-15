@@ -1,7 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:login_test/core/themes/app_color.dart';
 import 'package:login_test/core/themes/app_text_style.dart';
+import 'package:login_test/data/local/secure_session_storage.dart';
 import 'package:login_test/data/models/user_model.dart';
+import 'package:login_test/views/customs/dialog_custom.dart';
+import 'package:login_test/views/login/login_screen.dart';
 
 import '../../generated/assets.gen.dart';
 
@@ -17,14 +21,37 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
-        title: Text('Trang chủ', style: AppTextStyles.style.s18.w700.darkGrayColor),
+        title: Text(
+          'home'.tr(),
+          style: AppTextStyles.style.s18.w700.darkGrayColor,
+        ),
         actions: [
           IconButton(
-            onPressed: () => _showLogoutDialog(context),
+            onPressed: () {
+              showDialogCustom(
+                context: context,
+                title: 'confirm'.tr(),
+                content: 'logout_question'.tr(),
+                onCancel: () {},
+                confirmText: 'confirm'.tr(),
+                onConfirm: () async {
+                  await SecureSessionStorage.clearSession();
+                  if (!context.mounted) return;
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+              );
+            },
             icon: Assets.svgs.icExit.svg(
-              colorFilter: ColorFilter.mode(AppColors.darkOrange, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.darkOrange,
+                BlendMode.srcIn,
+              ),
             ),
-            tooltip: 'Đăng xuất',
           ),
         ],
       ),
@@ -33,9 +60,9 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoTile('Tên đăng nhập', user.username),
+            _buildInfoTile('username'.tr(), user.username),
             const SizedBox(height: 16),
-            _buildInfoTile('Họ và tên', user.fullName),
+            _buildInfoTile('full_name'.tr(), user.fullName),
           ],
         ),
       ),
@@ -61,6 +88,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-  void _showLogoutDialog(BuildContext context) {}
 }

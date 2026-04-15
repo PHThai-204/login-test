@@ -1,18 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/remote/services/auth_service.dart';
 import '../../../data/enums/status_enum.dart';
+import '../../../data/local/secure_session_storage.dart';
 import '../../../data/models/user_model.dart';
+import '../../../data/repositories/auth_repository.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final AuthService authService;
+  final AuthRepository authRepository;
 
-  LoginCubit({AuthService? authService})
-      : authService = authService ?? AuthService(),
-        super(const LoginState());
+  LoginCubit({required this.authRepository}) : super(const LoginState());
 
   void faxCodeChanged(String faxCode) {
     final faxCodeError = _validationFaxCode(faxCode);
@@ -34,7 +33,6 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> login() async {
-    // Validate all fields first
     emit(
       state.copyWith(
         showValidationErrors: true,
@@ -44,47 +42,41 @@ class LoginCubit extends Cubit<LoginState> {
       ),
     );
 
-    // If any validation failed, stop here
     if (_validationFaxCode(state.faxCode).isNotEmpty ||
         _validationUsername(state.username).isNotEmpty ||
         _validationPassword(state.password).isNotEmpty) {
       return;
     }
 
-    // All validations passed, proceed to login
     emit(state.copyWith(status: StatusEnum.processing));
 
     try {
-      final user = await authService.login(
-        taxCode: state.faxCode,
-        username: state.username,
-        password: state.password,
+      final user = await authRepository.login(
+        taxCode: state.faxCode.trim(),
+        username: state.username.trim(),
+        password: state.password.trim(),
       );
 
-      emit(state.copyWith(
-        status: StatusEnum.success,
-        errorMessage: '',
-        user: user,
-      ));
+      await SecureSessionStorage.saveSession(username: user.username);
+
+      emit(state.copyWith(status: StatusEnum.success, errorMessage: '', user: user));
     } catch (e) {
-      emit(state.copyWith(
-        status: StatusEnum.failure,
-        errorMessage: e.toString(),
-      ));
+      emit(state.copyWith(status: StatusEnum.failure, errorMessage: e.toString()));
     }
   }
 
-   String _validationFaxCode(String faxCode) {
+  String _validationFaxCode(String faxCode) {
     final value = faxCode.trim();
     if (value.isEmpty) {
-      return 'email_empty_error'.tr();
-    } else if (value.length > 50) {
-      return 'email_too_long_error'.tr();
-    } else if (value.length < 6) {
-      return 'email_too_short_error'.tr();
-    } else {
-      return '';
+      return 'fax_code_empty_error'.tr();
     }
+
+    final regex = RegExp(r'^(?:\d{10}|\d{12}|\d{10}-\d{3})$');
+    if (!regex.hasMatch(value)) {
+      return 'fax_code_fail'.tr();
+    }
+
+    return '';
   }
 
   String _validationUsername(String username) {
@@ -107,5 +99,13 @@ class LoginCubit extends Cubit<LoginState> {
     } else {
       return '';
     }
+  }
+
+  void clearTaxCode() {
+    emit(state.copyWith(faxCode: '', faxCodeError: ''));
+  }
+
+  void clearUsername() {
+    emit(state.copyWith(username: '', usernameError: ''));
   }
 }

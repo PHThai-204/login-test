@@ -7,5 +7,16 @@
   "login_failed": "Thông tin đăng nhập không hợp lệ",
   "help": "Trợ giúp",
   "group": "Group",
-  "search": "Tra cứu"
+  "search": "Tra cứu",
+  "password_empty_error": "Mật khẩu không được để trống",
+  "password_fail": "Mật khẩu phải từ 6 đến 50 ký tự",
+  "username_empty_error": "Tên đăng nhập không được để trống",
+  "fax_code_empty_error": "Mã số thuế không được để trống",
+  "fax_code_fail": "Vui lòng nhập mã số thuế hợp lệ",
+  "confirm": "Xác nhận",
+  "logout_question": "Bạn chắc chắn đăng xuất?",
+  "full_name": "Họ và tên",
+  "home": "Trang chủ",
+  "cancel": "Huỷ",
+  "username": "Tên đăng nhập"
 }

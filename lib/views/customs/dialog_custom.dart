@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:login_test/core/themes/app_color.dart';
 import 'package:login_test/core/themes/app_text_style.dart';
@@ -95,7 +96,7 @@ class DialogCustom extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: Text('Hủy', style: AppTextStyles.style.s16.w600.orchalColor),
+                    child: Text('cancel'.tr(), style: AppTextStyles.style.s16.w600.orchalColor),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -112,7 +113,7 @@ class DialogCustom extends StatelessWidget {
                     elevation: 0,
                   ),
                   child: Text(
-                    confirmText ?? 'Xác nhận',
+                    confirmText ?? 'confirm'.tr(),
                     style: AppTextStyles.style.s16.w600.whiteColor,
                   ),
                 ),

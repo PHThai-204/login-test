@@ -33,6 +33,7 @@ class PasswordInput extends StatelessWidget {
           inputType: state.isPasswordVisible ? TextInputType.text : TextInputType.visiblePassword,
           textInputAction: textInputAction,
           alwaysShowSuffix: true,
+          isPasswordField: true,
           onChanged: (value) => context.read<LoginCubit>().onPasswordChanged(value) ,
           onSubmitted: onSubmitted,
           textStyle: AppTextStyles.style.w600.s16.darianColor,

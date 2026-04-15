@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:login_test/core/di/injection.dart';
 import 'package:login_test/core/themes/app_color.dart';
 import 'package:login_test/data/enums/status_enum.dart';
 import 'package:login_test/views/customs/dialog_custom.dart';
@@ -14,14 +15,26 @@ import 'components/tax_input.dart';
 import 'components/username_input.dart';
 import 'cubit/login_cubit.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => LoginCubit(authRepository: getIt()),
+      child: const LoginView(),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginState();
+}
+
+class _LoginState extends State<LoginView> {
   late final FocusNode _taxFocusNode;
   late final FocusNode _usernameFocusNode;
   late final FocusNode _passwordFocusNode;

@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_test/core/di/injection.dart';
+import 'package:login_test/data/enums/status_enum.dart';
 
 import '../../core/themes/app_color.dart';
-import '../login/cubit/login_cubit.dart';
+import '../../generated/assets.gen.dart';
+import '../home/home_screen.dart';
 import '../login/login_screen.dart';
+import 'cubit/splash_cubit.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  Future<void> _init() async {
-    await Future.delayed(const Duration(seconds: 3));
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(create: (context) => LoginCubit(), child: const LoginScreen()),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.black,
-      body: Center(
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8),
-            child: Image.asset(
-              'assets/images/img_logo.png',
-              width: 80,
-              height: 80,
-              fit: BoxFit.contain,
-            ),
-          ),
+    return BlocProvider(
+      create: (_) => SplashCubit(authRepository: getIt())
+        ..syncData()
+        ..checkSession(),
+      child: BlocListener<SplashCubit, SplashState>(
+        listenWhen: (previous, current) => previous.status != current.status,
+        listener: (context, state) {
+          if (state.status.isProcessing) {
+            return;
+          }
+          if (state.user != null && state.user!.enabled && state.status.isSuccess) {
+            Navigator.of(
+              context,
+            ).pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen(user: state.user!)));
+          } else if (state.status.isSuccess || state.status.isFailure) {
+            Navigator.of(
+              context,
+            ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+          }
+        },
+        child: Scaffold(
+          backgroundColor: AppColors.white,
+          body: Center(child: Assets.images.imgLogo.image()),
         ),
       ),
     );
