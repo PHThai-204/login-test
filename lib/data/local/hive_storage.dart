@@ -46,7 +46,7 @@ class HiveStorage {
     final users = getCachedUsers().toList(growable: true);
 
     try {
-      final index = users.indexWhere((us) => us.taxCodeId == taxCode && us.username == username);
+      final index = users.indexWhere((us) => us.taxCode == taxCode && us.username == username);
       
       if (index == -1) {
         throw AuthException('Thông tin đăng nhập không hợp lệ');
@@ -58,9 +58,39 @@ class HiveStorage {
         throw AuthException('Tài khoản đã bị khóa');
       }
 
+      if (user.lockUntil != null && user.lockUntil!.isAfter(DateTime.now())) {
+        throw AuthException('Tài khoản của bạn đã bị tạm khoá trong 5 phút do nhập sai nhiều lần.');
+      }
+
       final hashedInput = await AppUtils.validatePassword(password);
 
       if (hashedInput != user.passwordHash) {
+        if (user.failedAttempts < 4) {
+          users[index] = UserModel(
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            taxCode: user.taxCode,
+            passwordHash: user.passwordHash,
+            enabled: user.enabled,
+            failedAttempts: user.failedAttempts + 1,
+            updatedAt: user.updatedAt,
+            lockUntil: user.lockUntil,
+          );
+        } else {
+          users[index] = UserModel(
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            taxCode: user.taxCode,
+            passwordHash: user.passwordHash,
+            enabled: user.enabled,
+            failedAttempts: 0,
+            updatedAt: user.updatedAt,
+            lockUntil: DateTime.now().add(const Duration(minutes: 5)),
+          );
+        }
+        await saveUsers(users);
         throw AuthException('Thông tin đăng nhập không hợp lệ');
       }
 
@@ -68,10 +98,12 @@ class HiveStorage {
         id: user.id,
         username: user.username,
         fullName: user.fullName,
-        taxCodeId: user.taxCodeId,
+        taxCode: user.taxCode,
         passwordHash: user.passwordHash,
         enabled: user.enabled,
+        failedAttempts: 0,
         updatedAt: DateTime.now(),
+        lockUntil: user.lockUntil,
       );
 
       users[index] = updatedUser;

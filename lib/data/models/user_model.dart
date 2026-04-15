@@ -1,42 +1,44 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class UserModel {
+import 'package:cloud_firestore/cloud_firestore.dart';class UserModel {
   final String id;
   final String username;
   final String fullName;
-  final String taxCodeId;
+  final String taxCode;
   final String passwordHash;
   final bool enabled;
   final DateTime? updatedAt;
+  final int failedAttempts;
+  final DateTime? lockUntil;
 
   UserModel({
     required this.id,
     required this.username,
     required this.fullName,
-    required this.taxCodeId,
+    required this.taxCode,
     required this.passwordHash,
     required this.enabled,
     this.updatedAt,
+    this.failedAttempts = 0,
+    this.lockUntil,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> data, String docId) {
-    DateTime? updatedAt;
-    if (data['updatedAt'] != null) {
-      if (data['updatedAt'] is Timestamp) {
-        updatedAt = (data['updatedAt'] as Timestamp).toDate();
-      } else if (data['updatedAt'] is String) {
-        updatedAt = DateTime.tryParse(data['updatedAt']);
-      }
-    }
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is Timestamp) return value.toDate();
+    if (value is String) return DateTime.tryParse(value);
+    return null;
+  }
 
+  factory UserModel.fromJson(Map<String, dynamic> data, String docId) {
     return UserModel(
       id: docId,
       username: data['username'] ?? '',
       fullName: data['fullName'] ?? '',
-      taxCodeId: data['taxCodeId'] ?? '',
+      taxCode: data['taxCode'] ?? '',
       passwordHash: data['passwordHash'] ?? '',
       enabled: data['enabled'] ?? false,
-      updatedAt: updatedAt,
+      failedAttempts: data['failedAttempts'] ?? 0,
+      updatedAt: _parseDateTime(data['updatedAt']),
+      lockUntil: _parseDateTime(data['lockUntil']),
     );
   }
 
@@ -45,10 +47,12 @@ class UserModel {
       'id': id,
       'username': username,
       'fullName': fullName,
-      'taxCodeId': taxCodeId,
+      'taxCodeId': taxCode,
       'passwordHash': passwordHash,
       'enabled': enabled,
+      'failedAttempts': failedAttempts,
       'updatedAt': updatedAt?.toIso8601String(),
+      'lockUntil': lockUntil?.toIso8601String(),
     };
   }
 
@@ -56,10 +60,12 @@ class UserModel {
     return {
       'username': username,
       'fullName': fullName,
-      'taxCodeId': taxCodeId,
+      'taxCodeId': taxCode,
       'passwordHash': passwordHash,
       'enabled': enabled,
+      'failedAttempts': failedAttempts,
       'updatedAt': FieldValue.serverTimestamp(),
+      'lockUntil': lockUntil != null ? Timestamp.fromDate(lockUntil!) : null,
     };
   }
 
@@ -68,10 +74,12 @@ class UserModel {
       id: data['id'] ?? '',
       username: data['username'] ?? '',
       fullName: data['fullName'] ?? '',
-      taxCodeId: data['taxCodeId'] ?? '',
+      taxCode: data['taxCodeId'] ?? '',
       passwordHash: data['passwordHash'] ?? '',
       enabled: data['enabled'] ?? false,
-      updatedAt: data['updatedAt'] != null ? DateTime.tryParse(data['updatedAt']) : null,
+      failedAttempts: data['failedAttempts'] ?? 0,
+      updatedAt: _parseDateTime(data['updatedAt']),
+      lockUntil: _parseDateTime(data['lockUntil']),
     );
   }
 }

@@ -7,31 +7,31 @@ import '../../../core/themes/app_text_style.dart';
 import '../../../generated/assets.gen.dart';
 import '../cubit/login_cubit.dart';
 
-class TaxInput extends StatelessWidget {
+class TaxCodeInput extends StatelessWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onSubmitted;
 
-  const TaxInput({super.key, this.focusNode, this.textInputAction, this.onSubmitted});
+  const TaxCodeInput({super.key, this.focusNode, this.textInputAction, this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) =>
-          previous.faxCode != current.faxCode ||
-          previous.faxCodeError != current.faxCodeError ||
+          previous.taxCode != current.taxCode ||
+          previous.taxCodeError != current.taxCodeError ||
           previous.showValidationErrors != current.showValidationErrors,
       builder: (context, state) {
-        final faxCodeError = state.showValidationErrors ? state.faxCodeError : '';
+        final taxCodeError = state.showValidationErrors ? state.taxCodeError : '';
 
         return TextFieldCustom(
           focusNode: focusNode,
           inputType: TextInputType.number,
           textInputAction: textInputAction,
-          labelText: 'fax_code'.tr(),
-          hintText: 'fax_code'.tr(),
-          errorText: faxCodeError,
-          onChanged: context.read<LoginCubit>().faxCodeChanged,
+          labelText: 'tax_code'.tr(),
+          hintText: 'tax_code'.tr(),
+          errorText: taxCodeError,
+          onChanged: context.read<LoginCubit>().taxCodeChanged,
           onSubmitted: onSubmitted,
           textStyle: AppTextStyles.style.w600.s16.darianColor,
           suffix: Assets.svgs.icCloseCircle.svg(),

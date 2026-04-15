@@ -1,6 +1,6 @@
 {
   "login": "Đăng nhập",
-  "fax_code": "Mã số thuế",
+  "tax_code": "Mã số thuế",
   "account": "Tài khoản",
   "password": "Mật khẩu",
   "close": "Đóng",
@@ -11,8 +11,8 @@
   "password_empty_error": "Mật khẩu không được để trống",
   "password_fail": "Mật khẩu phải từ 6 đến 50 ký tự",
   "username_empty_error": "Tên đăng nhập không được để trống",
-  "fax_code_empty_error": "Mã số thuế không được để trống",
-  "fax_code_fail": "Vui lòng nhập mã số thuế hợp lệ",
+  "tax_code_empty_error": "Mã số thuế không được để trống",
+  "tax_code_fail": "Vui lòng nhập mã số thuế hợp lệ",
   "confirm": "Xác nhận",
   "logout_question": "Bạn chắc chắn đăng xuất?",
   "full_name": "Họ và tên",

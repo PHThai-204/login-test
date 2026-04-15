@@ -13,9 +13,9 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit({required this.authRepository}) : super(const LoginState());
 
-  void faxCodeChanged(String faxCode) {
-    final faxCodeError = _validationFaxCode(faxCode);
-    emit(state.copyWith(faxCode: faxCode, faxCodeError: faxCodeError));
+  void taxCodeChanged(String taxCode) {
+    final taxCodeError = _validationTaxCode(taxCode);
+    emit(state.copyWith(taxCode: taxCode, taxCodeError: taxCodeError));
   }
 
   void onUsernameChanged(String username) {
@@ -36,15 +36,15 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         showValidationErrors: true,
-        faxCodeError: _validationFaxCode(state.faxCode),
+        taxCodeError: _validationTaxCode(state.taxCode),
         usernameError: _validationUsername(state.username),
         passwordError: _validationPassword(state.password),
       ),
     );
 
-    if (_validationFaxCode(state.faxCode).isNotEmpty ||
-        _validationUsername(state.username).isNotEmpty ||
-        _validationPassword(state.password).isNotEmpty) {
+    if (state.taxCodeError.trim().isNotEmpty ||
+        state.usernameError.trim().isNotEmpty ||
+        state.passwordError.trim().isNotEmpty) {
       return;
     }
 
@@ -52,7 +52,7 @@ class LoginCubit extends Cubit<LoginState> {
 
     try {
       final user = await authRepository.login(
-        taxCode: state.faxCode.trim(),
+        taxCode: state.taxCode.trim(),
         username: state.username.trim(),
         password: state.password.trim(),
       );
@@ -65,15 +65,15 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  String _validationFaxCode(String faxCode) {
-    final value = faxCode.trim();
+  String _validationTaxCode(String taxCode) {
+    final value = taxCode.trim();
     if (value.isEmpty) {
-      return 'fax_code_empty_error'.tr();
+      return 'tax_code_empty_error'.tr();
     }
 
     final regex = RegExp(r'^(?:\d{10}|\d{12}|\d{10}-\d{3})$');
     if (!regex.hasMatch(value)) {
-      return 'fax_code_fail'.tr();
+      return 'tax_code_fail'.tr();
     }
 
     return '';
@@ -88,8 +88,8 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  String _validationPassword(String email) {
-    final value = email.trim();
+  String _validationPassword(String password) {
+    final value = password.trim();
     if (value.isEmpty) {
       return 'password_empty_error'.tr();
     } else if (value.length > 50) {
@@ -102,7 +102,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void clearTaxCode() {
-    emit(state.copyWith(faxCode: '', faxCodeError: ''));
+    emit(state.copyWith(taxCode: '', taxCodeError: ''));
   }
 
   void clearUsername() {

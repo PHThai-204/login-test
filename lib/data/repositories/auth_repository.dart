@@ -43,13 +43,31 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       if (await InternetConnection().hasInternetAccess) {
-        final user = await _authService.login(
-          taxCode: taxCode,
-          username: username,
-          password: password,
-        );
-        await _upsertCachedUser(user);
-        return user;
+        try {
+          final user = await _authService.login(
+            taxCode: taxCode,
+            username: username,
+            password: password,
+          );
+          // Sync toàn bộ users từ Firebase vào Hive khi login thành công
+          try {
+            final allUsers = await _authService.getAllUsers();
+            await HiveStorage.saveUsers(allUsers);
+          } catch (e) {
+            debugPrint('Lỗi đồng bộ users từ Firebase: $e');
+            await _upsertCachedUser(user);
+          }
+          return user;
+        } catch (e) {
+          // Nếu login Firebase thất bại, vẫn cần sync Hive để cập nhập failedAttempts và lockUntil
+          try {
+            final allUsers = await _authService.getAllUsers();
+            await HiveStorage.saveUsers(allUsers);
+          } catch (syncE) {
+            debugPrint('Lỗi đồng bộ users từ Firebase khi login fail: $syncE');
+          }
+          rethrow;
+        }
       }
 
       final user = await HiveStorage.loginLocal(
@@ -86,7 +104,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> _upsertCachedUser(UserModel user) async {
     final users = HiveStorage.getCachedUsers().toList(growable: true);
     final index = users.indexWhere(
-      (u) => u.taxCodeId == user.taxCodeId && u.username == user.username,
+      (u) => u.taxCode == user.taxCode && u.username == user.username,
     );
 
     if (index >= 0) {

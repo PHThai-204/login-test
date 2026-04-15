@@ -11,7 +11,7 @@ import '../../core/themes/app_text_style.dart';
 
 import '../../generated/assets.gen.dart';
 import 'components/password_input.dart';
-import 'components/tax_input.dart';
+import 'components/tax_code_input.dart';
 import 'components/username_input.dart';
 import 'cubit/login_cubit.dart';
 
@@ -85,86 +85,88 @@ class _LoginState extends State<LoginView> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  const SizedBox(height: 34),
-                  Align(alignment: Alignment.centerLeft, child: Assets.images.imgLogo.image()),
-                  const SizedBox(height: 24),
-                  TaxInput(
-                    focusNode: _taxFocusNode,
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (_) => FocusScope.of(context).requestFocus(_usernameFocusNode),
-                  ),
-                  const SizedBox(height: 10),
-                  UsernameInput(
-                    focusNode: _usernameFocusNode,
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
-                  ),
-                  const SizedBox(height: 10),
-                  PasswordInput(
-                    focusNode: _passwordFocusNode,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => context.read<LoginCubit>().login(),
-                  ),
-                  const SizedBox(height: 10),
-                  BlocBuilder<LoginCubit, LoginState>(
-                    buildWhen: (previous, current) => previous.status != current.status,
-                    builder: (context, state) {
-                      final isLoading = state.status.isProcessing;
-                      return SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: isLoading ? null : context.read<LoginCubit>().login,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.darkOrange,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                            disabledBackgroundColor: Colors.grey[400],
+              child: AutofillGroup(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 34),
+                    Align(alignment: Alignment.centerLeft, child: Assets.images.imgLogo.image()),
+                    const SizedBox(height: 24),
+                    TaxCodeInput(
+                      focusNode: _taxFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (_) => FocusScope.of(context).requestFocus(_usernameFocusNode),
+                    ),
+                    const SizedBox(height: 10),
+                    UsernameInput(
+                      focusNode: _usernameFocusNode,
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
+                    ),
+                    const SizedBox(height: 10),
+                    PasswordInput(
+                      focusNode: _passwordFocusNode,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => context.read<LoginCubit>().login(),
+                    ),
+                    const SizedBox(height: 10),
+                    BlocBuilder<LoginCubit, LoginState>(
+                      buildWhen: (previous, current) => previous.status != current.status,
+                      builder: (context, state) {
+                        final isLoading = state.status.isProcessing;
+                        return SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: isLoading ? null : context.read<LoginCubit>().login,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.darkOrange,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              disabledBackgroundColor: Colors.grey[400],
+                            ),
+                            child: isLoading
+                                ? const SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text('login'.tr(), style: AppTextStyles.style.s16.w600.whiteColor),
                           ),
-                          child: isLoading
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation(Colors.white),
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text('login'.tr(), style: AppTextStyles.style.s16.w600.whiteColor),
+                        );
+                      },
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _BottomActionItem(
+                            icon: Assets.svgs.icHeadphone.svg(),
+                            label: 'help'.tr(),
+                          ),
                         ),
-                      );
-                    },
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _BottomActionItem(
-                          icon: Assets.svgs.icHeadphone.svg(),
-                          label: 'help'.tr(),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _BottomActionItem(
+                            icon: Assets.svgs.icSocialLink.svg(),
+                            label: 'group'.tr(),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _BottomActionItem(
-                          icon: Assets.svgs.icSocialLink.svg(),
-                          label: 'group'.tr(),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _BottomActionItem(
+                            icon: Assets.svgs.icSearchNormal.svg(),
+                            label: 'search'.tr(),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _BottomActionItem(
-                          icon: Assets.svgs.icSearchNormal.svg(),
-                          label: 'search'.tr(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
           ),

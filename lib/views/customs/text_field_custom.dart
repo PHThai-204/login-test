@@ -47,14 +47,10 @@ class TextFieldCustom extends StatefulWidget {
 class _TextFieldCustomState extends State<TextFieldCustom> {
   late TextEditingController _textEditingController;
   late final FocusNode _focusNode;
-  late final bool _ownsController;
-  late final bool _ownsFocusNode;
 
   @override
   void initState() {
     super.initState();
-    _ownsController = widget.controller == null;
-    _ownsFocusNode = widget.focusNode == null;
     _textEditingController = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
   }
@@ -62,12 +58,8 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
   @override
   void dispose() {
     super.dispose();
-    if (_ownsController) {
-      _textEditingController.dispose();
-    }
-    if (_ownsFocusNode) {
-      _focusNode.dispose();
-    }
+    _textEditingController.dispose();
+    _focusNode.dispose();
   }
 
   @override
