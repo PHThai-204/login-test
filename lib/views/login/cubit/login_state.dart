@@ -9,6 +9,7 @@ class LoginState {
   final String taxCodeError;
   final String usernameError;
   final String passwordError;
+  final int submitAttempt;
   final StatusEnum status;
   final String errorMessage;
   final UserModel? user;
@@ -22,6 +23,7 @@ class LoginState {
     this.taxCodeError = '',
     this.usernameError = '',
     this.passwordError = '',
+    this.submitAttempt = 0,
     this.status = StatusEnum.initial,
     this.errorMessage = '',
     this.user,
@@ -36,6 +38,7 @@ class LoginState {
     String? taxCodeError,
     String? usernameError,
     String? passwordError,
+    int? submitAttempt,
     StatusEnum? status,
     String? errorMessage,
     UserModel? user,
@@ -49,6 +52,7 @@ class LoginState {
       taxCodeError: taxCodeError ?? this.taxCodeError,
       usernameError: usernameError ?? this.usernameError,
       passwordError: passwordError ?? this.passwordError,
+      submitAttempt: submitAttempt ?? this.submitAttempt,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
       user: user ?? this.user,

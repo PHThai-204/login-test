@@ -35,6 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> login() async {
     emit(
       state.copyWith(
+        submitAttempt: state.submitAttempt + 1,
         showValidationErrors: true,
         taxCodeError: _validationTaxCode(state.taxCode),
         usernameError: _validationUsername(state.username),

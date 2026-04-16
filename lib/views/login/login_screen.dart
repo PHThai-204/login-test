@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:login_test/core/di/injection.dart';
-import 'package:login_test/core/themes/app_color.dart';
 import 'package:login_test/data/enums/status_enum.dart';
 import 'package:login_test/views/customs/dialog_custom.dart';
 import 'package:login_test/views/home/home_screen.dart';
-import '../../core/themes/app_text_style.dart';
 
+import '../../core/themes/app_text_style.dart';
 import '../../core/themes/app_theme.dart';
 import '../../generated/assets.gen.dart';
 import 'components/password_input.dart';
@@ -86,19 +85,16 @@ class _LoginState extends State<LoginView> {
                     const SizedBox(height: 24),
                     TaxCodeInput(
                       focusNode: _taxFocusNode,
-                      textInputAction: TextInputAction.next,
                       onSubmitted: (_) => FocusScope.of(context).requestFocus(_usernameFocusNode),
                     ),
                     const SizedBox(height: 10),
                     UsernameInput(
                       focusNode: _usernameFocusNode,
-                      textInputAction: TextInputAction.next,
                       onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
                     ),
                     const SizedBox(height: 10),
                     PasswordInput(
                       focusNode: _passwordFocusNode,
-                      textInputAction: TextInputAction.done,
                       onSubmitted: (_) => context.read<LoginCubit>().login(),
                     ),
                     const SizedBox(height: 10),
@@ -120,7 +116,10 @@ class _LoginState extends State<LoginView> {
                                       strokeWidth: 2,
                                     ),
                                   )
-                                : Text('login'.tr(), style: AppTextStyles.style.s16.w600.whiteColor),
+                                : Text(
+                                    'login'.tr(),
+                                    style: AppTextStyles.style.s16.w600.whiteColor,
+                                  ),
                           ),
                         );
                       },
@@ -182,10 +181,7 @@ class _BottomActionItem extends StatelessWidget {
         children: [
           icon,
           const SizedBox(width: 6),
-          Text(
-            label,
-            style: context.textTheme.labelSmall,
-          ),
+          Text(label, style: context.textTheme.labelSmall),
         ],
       ),
     );

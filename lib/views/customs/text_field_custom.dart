@@ -18,6 +18,8 @@ class TextFieldCustom extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
   final Function()? onClickSuffix;
   final Iterable<String>? autofillHints;
+  final AnimationController animation;
+  final Animation<double> offset;
 
   const TextFieldCustom({
     super.key,
@@ -35,15 +37,17 @@ class TextFieldCustom extends StatefulWidget {
     this.alwaysShowSuffix = false,
     this.isPasswordField = false,
     this.autofillHints = const <String>[],
+    required this.animation,
+    required this.offset,
   });
 
   @override
   State<StatefulWidget> createState() => _TextFieldCustomState();
 }
 
-class _TextFieldCustomState extends State<TextFieldCustom> {
+class _TextFieldCustomState extends State<TextFieldCustom> with SingleTickerProviderStateMixin {
   late TextEditingController _textEditingController;
-  late final FocusNode _focusNode;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
@@ -68,60 +72,63 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           Text(widget.labelText!, style: context.textTheme.labelMedium),
         ],
         SizedBox(height: 8),
-        TextField(
-          controller: _textEditingController,
-          focusNode: _focusNode,
-          keyboardType: widget.inputType ?? TextInputType.text,
-          textInputAction: widget.textInputAction,
-          onChanged: widget.onChanged,
-          onSubmitted: widget.onSubmitted,
-          autofillHints: widget.autofillHints,
-          style: context.textTheme.titleSmall,
-          obscureText: widget.inputType == TextInputType.visiblePassword ? true : false,
-          obscuringCharacter: '✶',
-          cursorColor: AppColors.darkOrange,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: context.textTheme.displayMedium,
-            border: AppThemes.inputDefault,
-            enabledBorder: AppThemes.inputDefault,
-            errorBorder: AppThemes.inputDefault,
-            focusedErrorBorder: AppThemes.inputFocused,
-            focusedBorder: AppThemes.inputFocused,
-            suffixIcon: widget.suffix != null
-                ? CupertinoButton(
-                    onPressed: () {
-                      widget.onClickSuffix?.call();
-                      if (!widget.isPasswordField) {
-                        _textEditingController.clear();
-                      }
-                    },
-                    child: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: _textEditingController,
-                      builder: (context, value, child) {
-                        if (widget.alwaysShowSuffix) {
-                          return widget.suffix!;
-                        }
-                        if (value.text.isNotEmpty) {
-                          return widget.suffix!;
-                        } else {
-                          return SizedBox();
+        AnimatedBuilder(
+          animation: widget.offset,
+          builder: (context, child) {
+            return Transform.translate(offset: Offset(widget.offset.value, 0), child: child);
+          },
+          child: TextField(
+            controller: _textEditingController,
+            focusNode: _focusNode,
+            keyboardType: widget.inputType ?? TextInputType.text,
+            textInputAction: widget.textInputAction,
+            onChanged: widget.onChanged,
+            onSubmitted: widget.onSubmitted,
+            autofillHints: widget.autofillHints,
+            style: context.textTheme.titleSmall,
+            obscureText: widget.inputType == TextInputType.visiblePassword ? true : false,
+            obscuringCharacter: '✶',
+            cursorColor: AppColors.darkOrange,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              hintStyle: context.textTheme.displayMedium,
+              border: AppThemes.inputDefault,
+              enabledBorder: AppThemes.inputDefault,
+              errorBorder: AppThemes.inputDefault,
+              focusedErrorBorder: AppThemes.inputFocused,
+              focusedBorder: AppThemes.inputFocused,
+              suffixIcon: widget.suffix != null
+                  ? CupertinoButton(
+                      onPressed: () {
+                        widget.onClickSuffix?.call();
+                        if (!widget.isPasswordField) {
+                          _textEditingController.clear();
                         }
                       },
-                    ),
-                  )
-                : null,
-            fillColor: context.theme.scaffoldBackgroundColor,
-            filled: true,
+                      child: ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: _textEditingController,
+                        builder: (context, value, child) {
+                          if (widget.alwaysShowSuffix) {
+                            return widget.suffix!;
+                          }
+                          if (value.text.isNotEmpty) {
+                            return widget.suffix!;
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                    )
+                  : null,
+              fillColor: context.theme.scaffoldBackgroundColor,
+              filled: true,
+            ),
           ),
         ),
         SizedBox(height: 4),
         Align(
           alignment: Alignment.centerRight,
-          child: Text(
-            widget.errorText,
-            style: context.textTheme.displaySmall,
-          ),
+          child: Text(widget.errorText, style: context.textTheme.displaySmall),
         ),
       ],
     );
