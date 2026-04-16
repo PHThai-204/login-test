@@ -19,10 +19,7 @@ abstract class AppThemes {
     scaffoldBackgroundColor: AppColors.white,
     primaryColor: AppColors.darkOrange,
     cardColor: AppColors.white,
-    colorScheme: ColorScheme.light(
-      primary: AppColors.darkOrange,
-      outline: AppColors.lightGrey,
-    ),
+    colorScheme: ColorScheme.light(primary: AppColors.darkOrange, outline: AppColors.lightGrey),
     textTheme: TextTheme(
       labelMedium: AppTextStyles.style.s16.w700.darkGrayColor,
 
@@ -40,6 +37,13 @@ abstract class AppThemes {
 
       /// label small
       labelSmall: AppTextStyles.style.s12.w600.blackColor,
+
+      /// title large
+      titleLarge: AppTextStyles.style.s18.w700.darkGrayColor,
+
+      bodySmall: AppTextStyles.style.s14.w400.orchalColor,
+
+      bodyMedium: AppTextStyles.style.s16.w600.darkGrayColor,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -57,10 +61,7 @@ abstract class AppThemes {
     scaffoldBackgroundColor: AppColors.black,
     primaryColor: AppColors.darkOrange,
     cardColor: AppColors.black,
-    colorScheme: ColorScheme.dark(
-      primary: AppColors.darkOrange,
-      outline: AppColors.white,
-    ),
+    colorScheme: ColorScheme.dark(primary: AppColors.darkOrange, outline: AppColors.white),
     textTheme: TextTheme(
       labelMedium: AppTextStyles.style.s16.w700.whiteColor,
       titleSmall: AppTextStyles.style.s16.w600.lightGreyColor,
@@ -68,6 +69,9 @@ abstract class AppThemes {
       displayMedium: AppTextStyles.style.s16.w600.smokeWhiteColor,
       displaySmall: AppTextStyles.style.s12.w400.redColor,
       labelSmall: AppTextStyles.style.s12.w600.smokeWhiteColor,
+      titleLarge: AppTextStyles.style.s18.w700.smokeWhiteColor,
+      bodySmall: AppTextStyles.style.s14.w400.lightGreyColor,
+      bodyMedium: AppTextStyles.style.s16.w600.whiteColor,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(

@@ -20,8 +20,10 @@ class LoginSession {
   }
 }
 
-class SecureSessionStorage {
+class SecureStorage {
   static const _sessionKey = 'auth_session';
+  static const _biometricKey = 'biometric_enabled';
+
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   static Future<void> saveSession({required String username}) async {
@@ -52,5 +54,14 @@ class SecureSessionStorage {
 
   static Future<void> clearSession() async {
     await _storage.delete(key: _sessionKey);
+  }
+
+  static Future<void> saveBiometricStatus(bool isEnabled) async {
+    await _storage.write(key: _biometricKey, value: isEnabled.toString());
+  }
+
+  static Future<bool> getBiometricStatus() async {
+    final raw = await _storage.read(key: _biometricKey);
+    return raw == 'true';
   }
 }

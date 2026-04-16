@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../local/hive_storage.dart';
-import '../local/secure_session_storage.dart';
+import '../local/secure_storage.dart';
 import '../models/user_model.dart';
 import '../remote/services/auth_service.dart';
 
@@ -27,7 +27,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserModel?> getCurrentSessionUser() async {
-    final session = await SecureSessionStorage.getSession();
+    final session = await SecureStorage.getSession();
     if (session == null) {
       return null;
     }

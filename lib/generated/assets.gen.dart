@@ -39,6 +39,9 @@ class $AssetsSvgsGen {
   /// File path: assets/svgs/ic_eye_open.svg
   SvgGenImage get icEyeOpen => const SvgGenImage('assets/svgs/ic_eye_open.svg');
 
+  /// File path: assets/svgs/ic_fingerprint.svg
+  SvgGenImage get icFingerprint => const SvgGenImage('assets/svgs/ic_fingerprint.svg');
+
   /// File path: assets/svgs/ic_headphone.svg
   SvgGenImage get icHeadphone => const SvgGenImage('assets/svgs/ic_headphone.svg');
 
@@ -49,7 +52,7 @@ class $AssetsSvgsGen {
   SvgGenImage get icSocialLink => const SvgGenImage('assets/svgs/ic_social_link.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [icCloseCircle, icExit, icEyeClose, icEyeOpen, icHeadphone, icSearchNormal, icSocialLink];
+  List<SvgGenImage> get values => [icCloseCircle, icExit, icEyeClose, icEyeOpen, icFingerprint, icHeadphone, icSearchNormal, icSocialLink];
 }
 
 class $AssetsTranslationsGen {

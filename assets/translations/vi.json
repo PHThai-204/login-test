@@ -18,5 +18,7 @@
   "full_name": "Họ và tên",
   "home": "Trang chủ",
   "cancel": "Huỷ",
-  "username": "Tên đăng nhập"
+  "username": "Tên đăng nhập",
+  "biometric_login": "Đăng nhập sinh trắc học",
+  "setting": "Cài đặt"
 }

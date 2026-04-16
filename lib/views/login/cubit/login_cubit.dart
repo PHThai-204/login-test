@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/biometric_service.dart';
 import '../../../data/enums/status_enum.dart';
-import '../../../data/local/secure_session_storage.dart';
+import '../../../data/local/secure_storage.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repositories/auth_repository.dart';
 
@@ -10,6 +12,7 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository authRepository;
+  final biometric = BiometricService();
 
   LoginCubit({required this.authRepository}) : super(const LoginState());
 
@@ -58,7 +61,7 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.trim(),
       );
 
-      await SecureSessionStorage.saveSession(username: user.username);
+      await SecureStorage.saveSession(username: user.username);
 
       emit(state.copyWith(status: StatusEnum.success, errorMessage: '', user: user));
     } catch (e) {
@@ -108,5 +111,14 @@ class LoginCubit extends Cubit<LoginState> {
 
   void clearUsername() {
     emit(state.copyWith(username: '', usernameError: ''));
+  }
+
+  void authenticate() async {
+    final authenticated = await biometric.authenticate();
+    if (authenticated) {
+      debugPrint('BBB: OK');
+    } else {
+      debugPrint('BBB: Fail');
+    }
   }
 }
