@@ -32,7 +32,7 @@ class UsernameInput extends StatelessWidget {
           onChanged: context.read<LoginCubit>().onUsernameChanged,
           textInputAction: textInputAction,
           onSubmitted: onSubmitted,
-          textStyle: AppTextStyles.style.w600.s16.darianColor,
+          autofillHints: const [AutofillHints.username],
           suffix: Assets.svgs.icCloseCircle.svg(),
           onClickSuffix: context.read<LoginCubit>().clearUsername,
         );

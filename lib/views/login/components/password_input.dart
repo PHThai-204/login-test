@@ -34,9 +34,9 @@ class PasswordInput extends StatelessWidget {
           textInputAction: textInputAction,
           alwaysShowSuffix: true,
           isPasswordField: true,
+          autofillHints: const [AutofillHints.password],
           onChanged: (value) => context.read<LoginCubit>().onPasswordChanged(value) ,
           onSubmitted: onSubmitted,
-          textStyle: AppTextStyles.style.w600.s16.darianColor,
           suffix: state.isPasswordVisible
               ? Assets.svgs.icEyeOpen.svg()
               : Assets.svgs.icEyeClose.svg(),

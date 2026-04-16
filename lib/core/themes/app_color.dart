@@ -9,4 +9,6 @@ class AppColors {
   static const Color darkOrange = Color(0xFFF24E1E);
   static const Color orchal = Color(0xFF5C6771);
   static const Color darian = Color(0xFF33414E);
+  static const Color smokeWhite = Color(0xFFFAF8F8);
+  static const Color red = Color(0xFFFF0000);
 }

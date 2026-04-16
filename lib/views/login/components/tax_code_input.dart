@@ -33,7 +33,6 @@ class TaxCodeInput extends StatelessWidget {
           errorText: taxCodeError,
           onChanged: context.read<LoginCubit>().taxCodeChanged,
           onSubmitted: onSubmitted,
-          textStyle: AppTextStyles.style.w600.s16.darianColor,
           suffix: Assets.svgs.icCloseCircle.svg(),
           onClickSuffix: context.read<LoginCubit>().clearTaxCode,
         );

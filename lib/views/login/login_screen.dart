@@ -9,6 +9,7 @@ import 'package:login_test/views/customs/dialog_custom.dart';
 import 'package:login_test/views/home/home_screen.dart';
 import '../../core/themes/app_text_style.dart';
 
+import '../../core/themes/app_theme.dart';
 import '../../generated/assets.gen.dart';
 import 'components/password_input.dart';
 import 'components/tax_code_input.dart';
@@ -48,18 +49,10 @@ class _LoginState extends State<LoginView> {
   }
 
   @override
-  void dispose() {
-    _taxFocusNode.dispose();
-    _usernameFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return KeyboardDismissOnTap(
       child: Scaffold(
-        backgroundColor: AppColors.white,
+        backgroundColor: context.theme.scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
         body: BlocListener<LoginCubit, LoginState>(
           listenWhen: (previous, current) => current.status != previous.status,
@@ -118,13 +111,6 @@ class _LoginState extends State<LoginView> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: isLoading ? null : context.read<LoginCubit>().login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.darkOrange,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                              disabledBackgroundColor: Colors.grey[400],
-                            ),
                             child: isLoading
                                 ? const SizedBox(
                                     height: 24,
@@ -187,9 +173,9 @@ class _BottomActionItem extends StatelessWidget {
     return Container(
       height: 54,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.theme.cardColor,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: AppColors.lightGrey),
+        border: Border.all(color: context.theme.colorScheme.outline),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -198,11 +184,7 @@ class _BottomActionItem extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF3B3B3B),
-            ),
+            style: context.textTheme.labelSmall,
           ),
         ],
       ),

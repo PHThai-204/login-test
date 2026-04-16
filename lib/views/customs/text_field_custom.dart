@@ -1,18 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:login_test/core/themes/app_color.dart';
-import 'package:login_test/core/themes/app_text_style.dart';
 import 'package:login_test/core/themes/app_theme.dart';
 
 class TextFieldCustom extends StatefulWidget {
   final TextEditingController? controller;
-  final TextStyle? textStyle;
   final TextInputType? inputType;
   final TextInputAction? textInputAction;
   final String hintText;
   final String? labelText;
   final String errorText;
-  final TextStyle? errorStyle;
   final FocusNode? focusNode;
   final bool alwaysShowSuffix;
   final Widget? suffix;
@@ -20,15 +17,14 @@ class TextFieldCustom extends StatefulWidget {
   final Function(String) onChanged;
   final ValueChanged<String>? onSubmitted;
   final Function()? onClickSuffix;
+  final Iterable<String>? autofillHints;
 
   const TextFieldCustom({
     super.key,
     this.controller,
-    this.textStyle,
     required this.hintText,
     this.labelText,
     required this.errorText,
-    this.errorStyle,
     this.focusNode,
     this.suffix,
     required this.onChanged,
@@ -38,6 +34,7 @@ class TextFieldCustom extends StatefulWidget {
     this.textInputAction,
     this.alwaysShowSuffix = false,
     this.isPasswordField = false,
+    this.autofillHints = const <String>[],
   });
 
   @override
@@ -68,7 +65,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.labelText != null) ...[
-          Text(widget.labelText!, style: AppTextStyles.style.s16.w700.darkGrayColor),
+          Text(widget.labelText!, style: context.textTheme.labelMedium),
         ],
         SizedBox(height: 8),
         TextField(
@@ -78,13 +75,14 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           textInputAction: widget.textInputAction,
           onChanged: widget.onChanged,
           onSubmitted: widget.onSubmitted,
-          style: AppTextStyles.style.s16.w600.darianColor,
+          autofillHints: widget.autofillHints,
+          style: context.textTheme.titleSmall,
           obscureText: widget.inputType == TextInputType.visiblePassword ? true : false,
           obscuringCharacter: '✶',
           cursorColor: AppColors.darkOrange,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: AppTextStyles.style.s16.w600.orchalColor,
+            hintStyle: context.textTheme.displayMedium,
             border: AppThemes.inputDefault,
             enabledBorder: AppThemes.inputDefault,
             errorBorder: AppThemes.inputDefault,
@@ -113,7 +111,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                     ),
                   )
                 : null,
-            fillColor: AppColors.white.withValues(alpha: 0.1),
+            fillColor: context.theme.scaffoldBackgroundColor,
             filled: true,
           ),
         ),
@@ -122,7 +120,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           alignment: Alignment.centerRight,
           child: Text(
             widget.errorText,
-            style: AppTextStyles.style.s12.w400.copyWith(color: Color(0xFFFF0000)),
+            style: context.textTheme.displaySmall,
           ),
         ),
       ],

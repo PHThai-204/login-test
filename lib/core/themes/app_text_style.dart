@@ -46,11 +46,13 @@ extension FontSizeCustom on TextStyle {
 
   TextStyle get s18 => copyWith(fontSize: 18);
 
-  TextStyle get s19 => copyWith(fontSize: 19);  
+  TextStyle get s19 => copyWith(fontSize: 19);
 }
 
 extension FontColorCustom on TextStyle {
   TextStyle get whiteColor => copyWith(color: AppColors.white);
+
+  TextStyle get lightGreyColor => copyWith(color: AppColors.lightGrey);
 
   TextStyle get blackColor => copyWith(color: AppColors.black);
 
@@ -59,4 +61,8 @@ extension FontColorCustom on TextStyle {
   TextStyle get orchalColor => copyWith(color: AppColors.orchal);
 
   TextStyle get darianColor => copyWith(color: AppColors.darian);
+
+  TextStyle get smokeWhiteColor => copyWith(color: AppColors.smokeWhite);
+
+  TextStyle get redColor => copyWith(color: AppColors.red);
 }
