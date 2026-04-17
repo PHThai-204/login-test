@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:login_test/core/themes/app_color.dart';
 import 'package:login_test/core/themes/app_theme.dart';
 
@@ -20,6 +21,7 @@ class TextFieldCustom extends StatefulWidget {
   final Iterable<String>? autofillHints;
   final AnimationController animation;
   final Animation<double> offset;
+  final List<TextInputFormatter>? inputFormatters;
 
   const TextFieldCustom({
     super.key,
@@ -39,6 +41,7 @@ class TextFieldCustom extends StatefulWidget {
     this.autofillHints = const <String>[],
     required this.animation,
     required this.offset,
+    this.inputFormatters,
   });
 
   @override
@@ -84,6 +87,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> with SingleTickerProv
             textInputAction: widget.textInputAction,
             onChanged: widget.onChanged,
             onSubmitted: widget.onSubmitted,
+            inputFormatters: widget.inputFormatters,
             autofillHints: widget.autofillHints,
             style: context.textTheme.titleSmall,
             obscureText: widget.inputType == TextInputType.visiblePassword ? true : false,

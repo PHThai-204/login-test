@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_test/views/customs/text_field_custom.dart';
 
+import '../../../core/utils/format_helper.dart';
 import '../../../generated/assets.gen.dart';
 import '../cubit/login_cubit.dart';
 
@@ -64,6 +65,7 @@ class TaxCodeInputState extends State<TaxCodeInput> with SingleTickerProviderSta
           return TextFieldCustom(
             focusNode: widget.focusNode,
             inputType: TextInputType.number,
+            inputFormatters: [TaxCodeFormatter()],
             textInputAction: TextInputAction.next,
             labelText: 'tax_code'.tr(),
             hintText: 'tax_code'.tr(),

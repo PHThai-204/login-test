@@ -46,6 +46,8 @@ class LoginCubit extends Cubit<LoginState> {
       ),
     );
 
+    debugPrint('BBB: ${state.taxCode}');
+
     if (state.taxCodeError.trim().isNotEmpty ||
         state.usernameError.trim().isNotEmpty ||
         state.passwordError.trim().isNotEmpty) {
@@ -53,7 +55,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
 
     emit(state.copyWith(status: StatusEnum.processing));
-
     try {
       final user = await authRepository.login(
         taxCode: state.taxCode.trim(),
