@@ -13,10 +13,10 @@ class UsernameInput extends StatefulWidget {
   const UsernameInput({super.key, this.focusNode, this.onSubmitted});
 
   @override
-  State<StatefulWidget> createState() => UsernameInputSTate();
+  State<StatefulWidget> createState() => UsernameInputState();
 }
 
-class UsernameInputSTate extends State<UsernameInput>  with SingleTickerProviderStateMixin {
+class UsernameInputState extends State<UsernameInput> with SingleTickerProviderStateMixin {
   late AnimationController _animation;
   late Animation<double> _offsetAnimation;
 

@@ -46,8 +46,6 @@ class LoginCubit extends Cubit<LoginState> {
       ),
     );
 
-    debugPrint('BBB: ${state.taxCode}');
-
     if (state.taxCodeError.trim().isNotEmpty ||
         state.usernameError.trim().isNotEmpty ||
         state.passwordError.trim().isNotEmpty) {
@@ -112,14 +110,5 @@ class LoginCubit extends Cubit<LoginState> {
 
   void clearUsername() {
     emit(state.copyWith(username: '', usernameError: ''));
-  }
-
-  void authenticate() async {
-    final authenticated = await biometric.authenticate();
-    if (authenticated) {
-      debugPrint('BBB: OK');
-    } else {
-      debugPrint('BBB: Fail');
-    }
   }
 }

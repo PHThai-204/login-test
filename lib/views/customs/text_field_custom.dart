@@ -74,7 +74,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> with SingleTickerProv
         if (widget.labelText != null) ...[
           Text(widget.labelText!, style: context.textTheme.labelMedium),
         ],
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         AnimatedBuilder(
           animation: widget.offset,
           builder: (context, child) {
@@ -129,7 +129,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> with SingleTickerProv
             ),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Align(
           alignment: Alignment.centerRight,
           child: Text(widget.errorText, style: context.textTheme.displaySmall),

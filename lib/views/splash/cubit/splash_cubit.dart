@@ -47,7 +47,7 @@ class SplashCubit extends Cubit<SplashState> {
       }
     } catch (e) {
       emit(state.copyWith(status: StatusEnum.failure));
-      debugPrint('Error: ${e.toString()}');
+      debugPrint('Session check error: ${e.toString()}');
     }
   }
 }

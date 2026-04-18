@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 
 class AppUtils {
+  static const String _nonce = 'test-demo-app_login';
+
   static Future<String> validatePassword(String password) async {
     final pbkdf2 = Pbkdf2(macAlgorithm: Hmac.sha256(), iterations: 100000, bits: 256);
 
@@ -10,7 +12,7 @@ class AppUtils {
 
     final newSecretKey = await pbkdf2.deriveKey(
       secretKey: secretKey,
-      nonce: utf8.encode('test-demo-app_login'),
+      nonce: utf8.encode(_nonce),
     );
 
     final bytes = await newSecretKey.extractBytes();

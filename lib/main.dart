@@ -13,7 +13,7 @@ Future<void> main() async {
     await Firebase.initializeApp();
     debugPrint('Firebase connected successfully');
   } catch (e) {
-    debugPrint(' Firebase connection failed: $e');
+    debugPrint('Firebase connection failed: $e');
   }
   await HiveStorage.init();
   configureDependencies();

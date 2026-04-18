@@ -1,4 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';class UserModel {
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserModel {
   final String id;
   final String username;
   final String fullName;
@@ -33,7 +35,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';class UserModel {
       id: docId,
       username: data['username'] ?? '',
       fullName: data['fullName'] ?? '',
-      taxCode: data['taxCode'] ?? '',
+      taxCode: data['taxCodeId'] ?? '',
       passwordHash: data['passwordHash'] ?? '',
       enabled: data['enabled'] ?? false,
       failedAttempts: data['failedAttempts'] ?? 0,

@@ -9,7 +9,10 @@ class BiometricService {
       final bool canCheckBiometrics = await _auth.canCheckBiometrics;
       bool isSupported = await _auth.isDeviceSupported();
 
-      if (!canCheckBiometrics || !isSupported) return false;
+      if (!canCheckBiometrics || !isSupported) {
+        debugPrint('Biometric not supported');
+        return false;
+      }
 
       final bool authenticated = await _auth.authenticate(
         localizedReason: 'Xác thực sinh trắc học',
@@ -17,7 +20,7 @@ class BiometricService {
       );
       return authenticated;
     } catch (e) {
-      debugPrint('BBB: $e');
+      debugPrint('Biometric error: $e');
       return false;
     }
   }

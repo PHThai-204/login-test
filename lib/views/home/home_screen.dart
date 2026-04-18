@@ -109,10 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         colorFilter: const ColorFilter.mode(AppColors.darkOrange, BlendMode.srcIn),
                       ),
                       const SizedBox(width: 12),
-                      Text(
-                        'biometric_login'.tr(),
-                        style: context.theme.textTheme.labelMedium,
-                      ),
+                      Text('biometric_login'.tr(), style: context.theme.textTheme.labelMedium),
                     ],
                   ),
                   CupertinoSwitch(

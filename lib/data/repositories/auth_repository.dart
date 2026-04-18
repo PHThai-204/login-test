@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:injectable/injectable.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
+import '../../core/network/network_info.dart';
 import '../local/hive_storage.dart';
 import '../local/secure_storage.dart';
 import '../models/user_model.dart';
@@ -22,8 +22,11 @@ abstract class AuthRepository {
 @Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
+  final NetworkInfo _networkInfo;
 
-  AuthRepositoryImpl({required AuthService authService}) : _authService = authService;
+  AuthRepositoryImpl({required AuthService authService, required NetworkInfo networkInfo})
+    : _authService = authService,
+      _networkInfo = networkInfo;
 
   @override
   Future<UserModel?> getCurrentSessionUser() async {
@@ -42,14 +45,13 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      if (await InternetConnection().hasInternetAccess) {
+      if (await _networkInfo.isConnected) {
         try {
           final user = await _authService.login(
             taxCode: taxCode,
             username: username,
             password: password,
           );
-          // Sync toàn bộ users từ Firebase vào Hive khi login thành công
           try {
             final allUsers = await _authService.getAllUsers();
             await HiveStorage.saveUsers(allUsers);
@@ -59,7 +61,6 @@ class AuthRepositoryImpl implements AuthRepository {
           }
           return user;
         } catch (e) {
-          // Nếu login Firebase thất bại, vẫn cần sync Hive để cập nhập failedAttempts và lockUntil
           try {
             final allUsers = await _authService.getAllUsers();
             await HiveStorage.saveUsers(allUsers);
@@ -83,7 +84,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> syncLocalUpdatesToFirebase() async {
-    if (!(await InternetConnection().hasInternetAccess)) return;
+    if (!await _networkInfo.isConnected) return;
 
     try {
       final cachedUsers = HiveStorage.getCachedUsers();
@@ -97,15 +98,13 @@ class AuthRepositoryImpl implements AuthRepository {
         }
       }
     } catch (e) {
-      debugPrint('Lỗi: $e');
+      debugPrint('Lỗi sync: $e');
     }
   }
 
   Future<void> _upsertCachedUser(UserModel user) async {
     final users = HiveStorage.getCachedUsers().toList(growable: true);
-    final index = users.indexWhere(
-      (u) => u.taxCode == user.taxCode && u.username == user.username,
-    );
+    final index = users.indexWhere((u) => u.taxCode == user.taxCode && u.username == user.username);
 
     if (index >= 0) {
       users[index] = user;
@@ -117,7 +116,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   Future<UserModel?> _getUser(String username) async {
-    if (await InternetConnection().hasInternetAccess) {
+    if (await _networkInfo.isConnected) {
       try {
         final user = await _authService.getUserByUsername(username);
         if (user != null) {

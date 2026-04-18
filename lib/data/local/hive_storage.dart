@@ -47,7 +47,7 @@ class HiveStorage {
 
     try {
       final index = users.indexWhere((us) => us.taxCode == taxCode && us.username == username);
-      
+
       if (index == -1) {
         throw AuthException('Thông tin đăng nhập không hợp lệ');
       }

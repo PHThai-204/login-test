@@ -18,6 +18,8 @@ class LoginSession {
       loggedInAt: DateTime.tryParse(json['loggedInAt'] as String? ?? '') ?? DateTime.now(),
     );
   }
+
+  bool get isExpired => DateTime.now().difference(loggedInAt).inHours > 24;
 }
 
 class SecureStorage {
@@ -43,6 +45,11 @@ class SecureStorage {
         return null;
       }
       final session = LoginSession.fromJson(decoded);
+      if (session.isExpired) {
+        await clearSession();
+        return null;
+      }
+
       if (session.username.trim().isEmpty) {
         return null;
       }

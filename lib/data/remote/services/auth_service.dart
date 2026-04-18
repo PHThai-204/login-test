@@ -6,7 +6,7 @@ import 'package:login_test/data/models/user_model.dart';
 
 import '../../exceptions/auth_exception.dart';
 
-@injectable
+@singleton
 class AuthService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 

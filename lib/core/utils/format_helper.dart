@@ -2,10 +2,7 @@ import 'package:flutter/services.dart';
 
 class TaxCodeFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     String text = newValue.text.replaceAll('-', '');
 
     if (!RegExp(r'^\d*$').hasMatch(text)) {
@@ -20,8 +17,7 @@ class TaxCodeFormatter extends TextInputFormatter {
     }
 
     if (text.length <= 13) {
-      String formatted =
-          '${text.substring(0, 10)}-${text.substring(10)}';
+      String formatted = '${text.substring(0, 10)}-${text.substring(10)}';
 
       return TextEditingValue(
         text: formatted,
