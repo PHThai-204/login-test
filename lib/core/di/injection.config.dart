@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:login_test/core/network/network_info.dart' as _i98;
 import 'package:login_test/data/remote/services/auth_service.dart' as _i123;
 import 'package:login_test/data/repositories/auth_repository.dart' as _i229;
+import 'package:login_test/views/login/cubit/login_cubit.dart' as _i1068;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -29,6 +30,9 @@ extension GetItInjectableX on _i174.GetIt {
         authService: gh<_i123.AuthService>(),
         networkInfo: gh<_i98.NetworkInfo>(),
       ),
+    );
+    gh.factory<_i1068.LoginCubit>(
+      () => _i1068.LoginCubit(authRepository: gh<_i229.AuthRepository>()),
     );
     return this;
   }

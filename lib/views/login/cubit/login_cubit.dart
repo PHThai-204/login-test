@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../core/services/biometric_service.dart';
 import '../../../data/enums/status_enum.dart';
@@ -10,6 +11,7 @@ import '../../../data/repositories/auth_repository.dart';
 
 part 'login_state.dart';
 
+@injectable
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository authRepository;
   final biometric = BiometricService();
@@ -54,8 +56,11 @@ class LoginCubit extends Cubit<LoginState> {
 
     emit(state.copyWith(status: StatusEnum.processing));
     try {
+      debugPrint(
+        'BBB: taxCode: ${state.taxCode}, username: ${state.username}, password: ${state.password}',
+      );
       final user = await authRepository.login(
-        taxCode: state.taxCode.trim(),
+        taxCode: _cleanTaxCode(state.taxCode),
         username: state.username.trim(),
         password: state.password.trim(),
       );
@@ -110,5 +115,9 @@ class LoginCubit extends Cubit<LoginState> {
 
   void clearUsername() {
     emit(state.copyWith(username: '', usernameError: ''));
+  }
+
+  String _cleanTaxCode(String taxCode) {
+    return taxCode.replaceAll('-', '');
   }
 }
